@@ -20,9 +20,3 @@ public sealed class TextNotifier : INotifier
         return new NotifyResult.Success();
     }
 }
-
-// абстракция консоли для тестируемости
-public interface IConsoleWriter
-{
-    void WriteLine(string value);
-}
