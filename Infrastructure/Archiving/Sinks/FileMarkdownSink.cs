@@ -27,6 +27,7 @@ public sealed class FileMarkdownSink : IFormattedSink
     {
         try
         {
+            // формируем Markdown блок
             var sb = new StringBuilder();
             sb.AppendLine(titleMarkdown);
             sb.AppendLine();
@@ -37,6 +38,7 @@ public sealed class FileMarkdownSink : IFormattedSink
 
             string content = sb.ToString();
 
+            // пишем в файл
             if (_mode == WriteMode.Overwrite)
                 _fileWriter.WriteAllText(_path, content);
             else
@@ -46,7 +48,6 @@ public sealed class FileMarkdownSink : IFormattedSink
         }
         catch (Exception ex)
         {
-            // Инфраструктурная ошибка сохраняется в Result-тип
             return new ArchiveResult.StorageError(ex.Message);
         }
     }

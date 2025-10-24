@@ -4,6 +4,7 @@ using Itmo.ObjectOrientedProgramming.Lab2.Domain.ValueObjects;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Domain.Users;
 
+// Хранит входящие и меняет их состояние
 public sealed class User
 {
     private readonly Dictionary<MessageId, UserMessageState> _inbox = new();
@@ -12,7 +13,7 @@ public sealed class User
 
     public ReceiveResult Receive(Message message)
     {
-        // guard: дубликаты не принимаем повторно
+        // дубликаты не принимаем повторно
         if (_inbox.ContainsKey(message.Id))
         {
             return new ReceiveResult.Duplicate();
@@ -26,12 +27,19 @@ public sealed class User
 
     public MarkAsReadResult MarkAsRead(MessageId id)
     {
+        // есть ли сообщение в инбоксе
         if (_inbox.TryGetValue(id, out UserMessageState state) is false)
+        {
             return new MarkAsReadResult.NotFound();
+        }
 
+        // отметка "прочитано"
         if (state.Equals(UserMessageState.Read))
+        {
             return new MarkAsReadResult.AlreadyRead();
+        }
 
+        // меняем статус и подтверждаем успех
         _inbox[id] = UserMessageState.Read;
         return new MarkAsReadResult.Success();
     }

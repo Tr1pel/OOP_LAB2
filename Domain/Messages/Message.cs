@@ -2,6 +2,7 @@
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Domain.Messages;
 
+// Неизменяемое доменное сообщение
 public sealed class Message
 {
     public Message(MessageId id, Title title, Body body, Importance importance, Timestamp timestamp)
@@ -9,8 +10,8 @@ public sealed class Message
         Id = id;
         Title = title;
         Body = body;
-        Importance = importance;
-        Timestamp = timestamp;
+        Importance = importance; // Важность
+        Timestamp = timestamp; // Момент создания или приема
     }
 
     public MessageId Id { get; }

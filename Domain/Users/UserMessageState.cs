@@ -1,5 +1,6 @@
 ﻿namespace Itmo.ObjectOrientedProgramming.Lab2.Domain.Users;
 
+// состояния сообщения
 public readonly record struct UserMessageState
 {
     private UserMessageState(string value)
@@ -12,6 +13,4 @@ public readonly record struct UserMessageState
     public static readonly UserMessageState Unread = new("Unread");
 
     public static readonly UserMessageState Read = new("Read");
-
-    public override string ToString() => Value;
 }

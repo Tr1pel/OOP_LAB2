@@ -21,7 +21,7 @@ public class FormattingArchiverTests
         {
             Calls++;
             LastMessage = message;
-            return $"# {message.Title}\n\n{message.Body}";
+            return $"# {message.Title.Value}\n\n{message.Body.Value}";
         }
     }
 

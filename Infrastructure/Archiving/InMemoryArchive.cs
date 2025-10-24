@@ -4,6 +4,7 @@ using Itmo.ObjectOrientedProgramming.Lab2.Domain.Results;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Infrastructure.Archiving;
 
+// Памятный архив
 public sealed class InMemoryArchive : IArchive
 {
     private readonly List<Message> _storage = new();

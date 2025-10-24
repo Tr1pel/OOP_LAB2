@@ -2,6 +2,7 @@
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Infrastructure.Console;
 
+// Инфраструктурный писатель в консоль
 public sealed class SystemConsoleWriter : IConsoleWriter
 {
     public void WriteLine(string value)

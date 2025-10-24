@@ -24,6 +24,4 @@ public readonly record struct MessageId
 
     // Создать новый идентификатор
     public static MessageId New() => new MessageId(Guid.NewGuid());
-
-    public override string ToString() => Value.ToString();
 }

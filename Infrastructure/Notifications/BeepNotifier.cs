@@ -3,6 +3,7 @@ using Itmo.ObjectOrientedProgramming.Lab2.Domain.Results;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Infrastructure.Notifications;
 
+// Даёт звуковой сигнал
 public sealed class BeepNotifier : INotifier
 {
     private readonly IBeepDevice _beep;

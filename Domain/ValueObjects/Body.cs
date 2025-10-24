@@ -3,7 +3,7 @@
 // Тело сообщения
 public readonly record struct Body
 {
-    public const int MaxLength = 4000;
+    public const int MaxLength = 4000; // граница длины тела
 
     public string Value { get; }
 
@@ -30,6 +30,4 @@ public readonly record struct Body
         body = new Body(normalized);
         return true;
     }
-
-    public override string ToString() => Value;
 }

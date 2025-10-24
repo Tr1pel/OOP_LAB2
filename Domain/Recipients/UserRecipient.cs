@@ -4,9 +4,10 @@ using Itmo.ObjectOrientedProgramming.Lab2.Domain.Users;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Domain.Recipients;
 
+// Получатель, доставляющий сообщение конкретному пользователю
 public sealed class UserRecipient : IRecipient
 {
-    private readonly User _user;
+    private readonly User _user; // кому
 
     public UserRecipient(User user)
     {

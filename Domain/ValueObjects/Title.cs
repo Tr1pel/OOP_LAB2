@@ -1,10 +1,9 @@
 ﻿namespace Itmo.ObjectOrientedProgramming.Lab2.Domain.ValueObjects;
 
 // Заголовок сообщения
-// непустая строка и длина не больше MaxLength
 public readonly record struct Title
 {
-    public const int MaxLength = 200;
+    private const int MaxLength = 200;
 
     public string Value { get; }
 
@@ -21,7 +20,7 @@ public readonly record struct Title
             return false;
         }
 
-        string trimmed = value.Trim();
+        string trimmed = value.Trim(); // убираем лишние пробелы
         if (trimmed.Length > MaxLength)
         {
             title = default;
@@ -31,6 +30,4 @@ public readonly record struct Title
         title = new Title(trimmed);
         return true;
     }
-
-    public override string ToString() => Value;
 }

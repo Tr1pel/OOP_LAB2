@@ -4,6 +4,7 @@ using Itmo.ObjectOrientedProgramming.Lab2.Domain.Results;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Domain.Recipients.Decorators;
 
+// Декоратор получателя
 public sealed class LoggingRecipient : IRecipient
 {
     private readonly IRecipient _inner;
@@ -11,16 +12,18 @@ public sealed class LoggingRecipient : IRecipient
 
     public LoggingRecipient(IRecipient inner, ILogger logger)
     {
+        // обязательный декорируемый и логгер
         _inner = inner ?? throw new ArgumentNullException(nameof(inner));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public ReceiveResult Receive(Message message)
     {
-        _logger.Info($"Receive -> {message.Id}: {message.Title}");
+        _logger.Info($"Receive -> {message.Id}: {message.Title}"); // вход в операцию
 
         ReceiveResult result = _inner.Receive(message);
 
+        // маршрутизация по результатам
         switch (result)
         {
             case ReceiveResult.Success:

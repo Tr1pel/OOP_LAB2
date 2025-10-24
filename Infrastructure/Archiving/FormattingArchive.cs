@@ -4,10 +4,11 @@ using Itmo.ObjectOrientedProgramming.Lab2.Domain.Results;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Infrastructure.Archiving;
 
+// Форматирует и отправляет в синк
 public sealed class FormattingArchive : IArchive
 {
-    private readonly IFormatter _formatter;
-    private readonly IFormattedSink _sink;
+    private readonly IFormatter _formatter; // кто форматирует
+    private readonly IFormattedSink _sink; // куда сохраняем
 
     public FormattingArchive(IFormatter formatter, IFormattedSink sink)
     {
@@ -17,9 +18,9 @@ public sealed class FormattingArchive : IArchive
 
     public ArchiveResult Save(Message message)
     {
-        string title = _formatter.FormatTitle(message);
-        string body = _formatter.FormatBody(message);
-        return _sink.Save(title, body);
+        string title = _formatter.FormatTitle(message); // рендерим заголовок
+        string body = _formatter.FormatBody(message); // рендерим тело
+        return _sink.Save(title, body); // сохраняем
     }
 }
 

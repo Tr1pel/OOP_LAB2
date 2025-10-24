@@ -4,6 +4,8 @@ using Itmo.ObjectOrientedProgramming.Lab2.Domain.ValueObjects;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Domain.Recipients.Decorators;
 
+// Декоратор получателя
+// пропускает только сообщения с нужной важностью
 public sealed class ImportanceFilterRecipient : IRecipient
 {
     private readonly IRecipient _inner;
@@ -15,10 +17,13 @@ public sealed class ImportanceFilterRecipient : IRecipient
         _minImportance = minImportance;
     }
 
+    // дилегируем или доставляем
     public ReceiveResult Receive(Message message)
     {
         if (message.Importance.CompareTo(_minImportance) < 0)
+        {
             return new ReceiveResult.FilteredOut();
+        }
 
         return _inner.Receive(message);
     }

@@ -1,17 +1,18 @@
 ﻿namespace Itmo.ObjectOrientedProgramming.Lab2.Domain.ValueObjects;
 
+// Метки времени
 public readonly record struct Timestamp : IComparable<Timestamp>
 {
-    public DateTimeOffset Value { get; }
+    private readonly DateTimeOffset _value;
 
     private Timestamp(DateTimeOffset valueUtc)
     {
-        Value = valueUtc;
+        _value = valueUtc;
     }
 
     public static bool TryCreate(DateTimeOffset value, out Timestamp ts)
     {
-        // Не допускаем default(DateTimeOffset). Остальные значения валидны.
+        // не допускаем default(DateTimeOffset) остальные значения валидны
         if (value == default)
         {
             ts = default;
@@ -25,7 +26,5 @@ public readonly record struct Timestamp : IComparable<Timestamp>
     // Текущее время
     public static Timestamp Now() => new Timestamp(DateTimeOffset.UtcNow);
 
-    public int CompareTo(Timestamp other) => Value.CompareTo(other.Value);
-
-    public override string ToString() => Value.ToString("O"); // ISO 8601
+    public int CompareTo(Timestamp other) => _value.CompareTo(other._value);
 }
