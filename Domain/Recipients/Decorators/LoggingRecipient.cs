@@ -18,10 +18,31 @@ public sealed class LoggingRecipient : IRecipient
     public ReceiveResult Receive(Message message)
     {
         _logger.Info($"Receive -> {message.Id}: {message.Title}");
+
         ReceiveResult result = _inner.Receive(message);
-        _logger.Info($"Receive <- {message.Id}: {result.GetType().Name}");
-        return result is ReceiveResult.Failed f
-            ? new ReceiveResult.LoggedOnly()
-            : result;
+
+        switch (result)
+        {
+            case ReceiveResult.Success:
+                _logger.Info($"Receive <- {message.Id}: Success");
+                break;
+            case ReceiveResult.FilteredOut:
+                _logger.Warn($"Receive <- {message.Id}: FilteredOut");
+                break;
+            case ReceiveResult.Duplicate:
+                _logger.Warn($"Receive <- {message.Id}: Duplicate");
+                break;
+            case ReceiveResult.LoggedOnly:
+                _logger.Info($"Receive <- {message.Id}: LoggedOnly");
+                break;
+            case ReceiveResult.Failed failed:
+                _logger.Err($"Receive <- {message.Id}: Failed: {failed.Reason}");
+                break;
+            default:
+                _logger.Info($"Receive <- {message.Id}: {result.GetType().Name}");
+                break;
+        }
+
+        return result;
     }
 }
