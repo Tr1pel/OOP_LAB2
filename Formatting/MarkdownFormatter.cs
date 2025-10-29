@@ -16,7 +16,7 @@ public sealed class MarkdownFormatter : IFormatter
         var sb = new StringBuilder();
         sb.AppendLine($"**Importance:** {message.Importance.Name}");
         sb.AppendLine();
-        sb.AppendLine(message.Body.Value); // само содержимое
+        sb.AppendLine(message.Body.Value);
         return sb.ToString();
     }
 }

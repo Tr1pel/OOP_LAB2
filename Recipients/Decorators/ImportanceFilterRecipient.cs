@@ -13,7 +13,7 @@ public sealed class ImportanceFilterRecipient : IRecipient
 
     public ImportanceFilterRecipient(IRecipient inner, Importance minImportance)
     {
-        _inner = inner ?? throw new ArgumentNullException(nameof(inner));
+        _inner = inner;
         _minImportance = minImportance;
     }
 
@@ -22,7 +22,7 @@ public sealed class ImportanceFilterRecipient : IRecipient
     {
         if (message.Importance.CompareTo(_minImportance) < 0)
         {
-            return new ReceiveResult.FilteredOut();
+            return new ReceiveResult.Failed("FilteredOut");
         }
 
         return _inner.Receive(message);

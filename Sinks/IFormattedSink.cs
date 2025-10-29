@@ -1,8 +1,6 @@
-﻿using Itmo.ObjectOrientedProgramming.Lab2.Results;
-
-namespace Itmo.ObjectOrientedProgramming.Lab2.Sinks;
+﻿namespace Itmo.ObjectOrientedProgramming.Lab2.Sinks;
 
 public interface IFormattedSink
 {
-    ArchiveResult Save(string titleMarkdown, string bodyMarkdown);
+    void Save(string titleMarkdown, string bodyMarkdown);
 }

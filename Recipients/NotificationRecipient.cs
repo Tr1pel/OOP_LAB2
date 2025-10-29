@@ -7,8 +7,8 @@ namespace Itmo.ObjectOrientedProgramming.Lab2.Recipients;
 // Получатель-нотификатор
 public sealed class NotificationRecipient : IRecipient
 {
-    private readonly INotifier _notifier; // канала уведомлений
-    private readonly string[] _keywords; // триггеры для отправки
+    private readonly INotifier _notifier;
+    private readonly string[] _keywords;
 
     public NotificationRecipient(INotifier notifier, params string[] keywords)
     {
@@ -23,16 +23,11 @@ public sealed class NotificationRecipient : IRecipient
             message.Title.ToString().Contains(k, StringComparison.OrdinalIgnoreCase) ||
             message.Body.ToString().Contains(k, StringComparison.OrdinalIgnoreCase));
 
-        if (!hasKeyword)
-        {
-            return new ReceiveResult.FilteredOut();
-        }
-
         NotifyResult result = _notifier.Notify();
         return result switch
         {
             NotifyResult.Success => new ReceiveResult.Success(), // оповещение ушло
-            NotifyResult.ChannelUnavailable err => new ReceiveResult.Failed(err.ChannelName), // канал недоступен
+            NotifyResult.ChannelUnavailable err => new ReceiveResult.Failed(err.ChannelName),
             _ => new ReceiveResult.Failed("ChannelUnavailable"),
         };
     }

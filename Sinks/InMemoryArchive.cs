@@ -1,6 +1,5 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab2.Abstractions;
 using Itmo.ObjectOrientedProgramming.Lab2.Messages;
-using Itmo.ObjectOrientedProgramming.Lab2.Results;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Sinks;
 
@@ -11,9 +10,8 @@ public sealed class InMemoryArchive : IArchive
 
     public IReadOnlyCollection<Message> Storage => _storage.AsReadOnly();
 
-    public ArchiveResult Save(Message message)
+    public void Save(Message message)
     {
         _storage.Add(message);
-        return new ArchiveResult.Success();
     }
 }

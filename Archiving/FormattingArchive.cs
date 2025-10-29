@@ -1,6 +1,5 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab2.Abstractions;
 using Itmo.ObjectOrientedProgramming.Lab2.Messages;
-using Itmo.ObjectOrientedProgramming.Lab2.Results;
 using Itmo.ObjectOrientedProgramming.Lab2.Sinks;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Archiving;
@@ -8,8 +7,8 @@ namespace Itmo.ObjectOrientedProgramming.Lab2.Archiving;
 // Форматирует и отправляет в синк
 public sealed class FormattingArchive : IArchive
 {
-    private readonly IFormatter _formatter; // кто форматирует
-    private readonly IFormattedSink _sink; // куда сохраняем
+    private readonly IFormatter _formatter;
+    private readonly IFormattedSink _sink;
 
     public FormattingArchive(IFormatter formatter, IFormattedSink sink)
     {
@@ -17,10 +16,10 @@ public sealed class FormattingArchive : IArchive
         _sink = sink;
     }
 
-    public ArchiveResult Save(Message message)
+    public void Save(Message message)
     {
-        string title = _formatter.FormatTitle(message); // рендерим заголовок
-        string body = _formatter.FormatBody(message); // рендерим тело
-        return _sink.Save(title, body); // сохраняем
+        string title = _formatter.FormatTitle(message);
+        string body = _formatter.FormatBody(message);
+        _sink.Save(title, body);
     }
 }

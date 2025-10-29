@@ -13,12 +13,6 @@ public sealed class User
 
     public ReceiveResult Receive(Message message)
     {
-        // дубликаты не принимаем повторно
-        if (_inbox.ContainsKey(message.Id))
-        {
-            return new ReceiveResult.Duplicate();
-        }
-
         // кладём новое сообщение в статусе "не прочитано"
         _inbox[message.Id] = UserMessageState.Unread;
 

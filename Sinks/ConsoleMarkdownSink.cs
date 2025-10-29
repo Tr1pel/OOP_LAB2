@@ -1,5 +1,4 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab2.Abstractions;
-using Itmo.ObjectOrientedProgramming.Lab2.Results;
 
 // Синк архивации в консоль
 namespace Itmo.ObjectOrientedProgramming.Lab2.Sinks;
@@ -13,10 +12,9 @@ public sealed class ConsoleMarkdownSink : IFormattedSink
         _console = console;
     }
 
-    public ArchiveResult Save(string titleMarkdown, string bodyMarkdown)
+    public void Save(string titleMarkdown, string bodyMarkdown)
     {
-        _console.WriteLine(titleMarkdown); // печатаем заголовок
-        _console.WriteLine(bodyMarkdown); // печатаем тело
-        return new ArchiveResult.Success();
+        _console.WriteLine(titleMarkdown);
+        _console.WriteLine(bodyMarkdown);
     }
 }

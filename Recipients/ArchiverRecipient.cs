@@ -16,13 +16,7 @@ public sealed class ArchiverRecipient : IRecipient
 
     public ReceiveResult Receive(Message message)
     {
-        // пытаемся сохранить в архив
-        ArchiveResult result = _archive.Save(message);
-        return result switch
-        {
-            ArchiveResult.Success => new ReceiveResult.Success(), // сообщение доставлено
-            ArchiveResult.StorageError err => new ReceiveResult.Failed(err.Error), // проблема хранилища
-            _ => new ReceiveResult.Failed("UnknownArchiveResult"),
-        };
+        _archive.Save(message);
+        return new ReceiveResult.Success();
     }
 }

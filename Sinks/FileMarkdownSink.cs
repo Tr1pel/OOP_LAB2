@@ -1,5 +1,4 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab2.Abstractions;
-using Itmo.ObjectOrientedProgramming.Lab2.Results;
 using System.Text;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Sinks;
@@ -12,12 +11,12 @@ public sealed class FileMarkdownSink : IFormattedSink
 
     public FileMarkdownSink(IFileWriter fileWriter, string path, WriteMode mode = WriteMode.Append)
     {
-        _fileWriter = fileWriter ?? throw new ArgumentNullException(nameof(fileWriter));
-        _path = path ?? throw new ArgumentNullException(nameof(path));
+        _fileWriter = fileWriter;
+        _path = path;
         _mode = mode;
     }
 
-    public ArchiveResult Save(string titleMarkdown, string bodyMarkdown)
+    public void Save(string titleMarkdown, string bodyMarkdown)
     {
         // формируем Markdown блок
         var sb = new StringBuilder();
@@ -35,7 +34,5 @@ public sealed class FileMarkdownSink : IFormattedSink
             _fileWriter.WriteAllText(_path, content);
         else
             _fileWriter.AppendAllText(_path, content);
-
-        return new ArchiveResult.Success();
     }
 }

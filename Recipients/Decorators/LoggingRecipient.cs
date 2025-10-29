@@ -12,9 +12,8 @@ public sealed class LoggingRecipient : IRecipient
 
     public LoggingRecipient(IRecipient inner, ILogger logger)
     {
-        // обязательный декорируемый и логгер
-        _inner = inner ?? throw new ArgumentNullException(nameof(inner));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _inner = inner;
+        _logger = logger;
     }
 
     public ReceiveResult Receive(Message message)
@@ -28,15 +27,6 @@ public sealed class LoggingRecipient : IRecipient
         {
             case ReceiveResult.Success:
                 _logger.Info($"Receive <- {message.Id}: Success");
-                break;
-            case ReceiveResult.FilteredOut:
-                _logger.Warn($"Receive <- {message.Id}: FilteredOut");
-                break;
-            case ReceiveResult.Duplicate:
-                _logger.Warn($"Receive <- {message.Id}: Duplicate");
-                break;
-            case ReceiveResult.LoggedOnly:
-                _logger.Info($"Receive <- {message.Id}: LoggedOnly");
                 break;
             case ReceiveResult.Failed failed:
                 _logger.Err($"Receive <- {message.Id}: Failed: {failed.Reason}");
