@@ -4,8 +4,7 @@ namespace Itmo.ObjectOrientedProgramming.Lab2.Abstractions;
 
 public interface IFormatter
 {
-    // отформатировать заголовок сообщения
-    string FormatTitle(Message message);
+    void WriteTitle(Message message);
 
-    string FormatBody(Message message);
+    void WriteBody(Message message);
 }
