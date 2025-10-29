@@ -1,7 +1,7 @@
-﻿using Itmo.ObjectOrientedProgramming.Lab2.Domain.Messages;
-using Itmo.ObjectOrientedProgramming.Lab2.Domain.Results;
-using Itmo.ObjectOrientedProgramming.Lab2.Domain.Users;
+﻿using Itmo.ObjectOrientedProgramming.Lab2.Messages;
+using Itmo.ObjectOrientedProgramming.Lab2.Results;
 using Itmo.ObjectOrientedProgramming.Lab2.Tests.TestHelpers;
+using Itmo.ObjectOrientedProgramming.Lab2.Users;
 using Xunit;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Tests;

@@ -1,5 +1,5 @@
-﻿using Itmo.ObjectOrientedProgramming.Lab2.Domain.Messages;
-using Itmo.ObjectOrientedProgramming.Lab2.Domain.ValueObjects;
+﻿using Itmo.ObjectOrientedProgramming.Lab2.Messages;
+using Itmo.ObjectOrientedProgramming.Lab2.Messages.ValueObjects;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Tests.TestHelpers;
 

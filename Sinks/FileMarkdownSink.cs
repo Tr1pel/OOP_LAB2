@@ -1,0 +1,41 @@
+﻿using Itmo.ObjectOrientedProgramming.Lab2.Abstractions;
+using Itmo.ObjectOrientedProgramming.Lab2.Results;
+using System.Text;
+
+namespace Itmo.ObjectOrientedProgramming.Lab2.Sinks;
+
+public sealed class FileMarkdownSink : IFormattedSink
+{
+    private readonly IFileWriter _fileWriter;
+    private readonly string _path;
+    private readonly WriteMode _mode;
+
+    public FileMarkdownSink(IFileWriter fileWriter, string path, WriteMode mode = WriteMode.Append)
+    {
+        _fileWriter = fileWriter ?? throw new ArgumentNullException(nameof(fileWriter));
+        _path = path ?? throw new ArgumentNullException(nameof(path));
+        _mode = mode;
+    }
+
+    public ArchiveResult Save(string titleMarkdown, string bodyMarkdown)
+    {
+        // формируем Markdown блок
+        var sb = new StringBuilder();
+        sb.AppendLine(titleMarkdown);
+        sb.AppendLine();
+        sb.AppendLine(bodyMarkdown);
+        sb.AppendLine();
+        sb.AppendLine("---");
+        sb.AppendLine();
+
+        string content = sb.ToString();
+
+        // пишем в файл
+        if (_mode == WriteMode.Overwrite)
+            _fileWriter.WriteAllText(_path, content);
+        else
+            _fileWriter.AppendAllText(_path, content);
+
+        return new ArchiveResult.Success();
+    }
+}
