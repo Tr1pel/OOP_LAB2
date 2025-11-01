@@ -34,7 +34,7 @@ public sealed class MarkdownFormatter : IFormatter
 
         if (_fileWriter is not null && _filePath is not null)
         {
-            string content = titleLine + System.Environment.NewLine;
+            string content = titleLine + Environment.NewLine;
             if (_fileMode == WriteMode.Overwrite)
             {
                 _fileWriter.WriteAllText(_filePath, content);
@@ -52,8 +52,8 @@ public sealed class MarkdownFormatter : IFormatter
         sb.AppendLine($"**Importance:** {message.Importance.Name}");
         sb.AppendLine();
         sb.AppendLine(message.Body.Value);
-
         string bodyBlock = sb.ToString();
+
         _console?.WriteLine(bodyBlock);
 
         if (_fileWriter is not null && _filePath is not null)

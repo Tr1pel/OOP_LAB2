@@ -1,74 +1,45 @@
-﻿using Itmo.ObjectOrientedProgramming.Lab2.Messages;
+﻿using Itmo.ObjectOrientedProgramming.Lab2.Abstractions;
+using Itmo.ObjectOrientedProgramming.Lab2.Archiving;
+using Itmo.ObjectOrientedProgramming.Lab2.Messages;
 using Itmo.ObjectOrientedProgramming.Lab2.Tests.TestHelpers;
 using Xunit;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Tests;
 
-// Тесты для форматирующего архиватора
 public class FormattingArchiverTests
 {
-    private interface IMessageFormatter { string Format(Message message); }
-
-    private interface IArchiveStorage { void Save(string formattedMessage); }
-
-    private sealed class FakeFormatter : IMessageFormatter
+    private sealed class SpyFormatter : IFormatter
     {
-        public int Calls { get; private set; }
+        public int WriteTitleCount { get; private set; }
+
+        public int WriteBodyCount { get; private set; }
 
         public Message? LastMessage { get; private set; }
 
-        public string Format(Message message)
+        void IFormatter.WriteTitle(Message message)
         {
-            Calls++;
+            WriteTitleCount++;
             LastMessage = message;
-            return $"# {message.Title.Value}\n\n{message.Body.Value}";
-        }
-    }
-
-    private sealed class SpyArchiveStorage : IArchiveStorage
-    {
-        public int SaveCalls { get; private set; }
-
-        public List<string> Saved { get; } = new();
-
-        public void Save(string formattedMessage)
-        {
-            SaveCalls++;
-            Saved.Add(formattedMessage);
-        }
-    }
-
-    private sealed class FormattingArchiver
-    {
-        private readonly IMessageFormatter _formatter;
-        private readonly IArchiveStorage _storage;
-
-        public FormattingArchiver(IMessageFormatter formatter, IArchiveStorage storage)
-        {
-            _formatter = formatter;
-            _storage = storage;
         }
 
-        public void Archive(Message message)
+        void IFormatter.WriteBody(Message message)
         {
-            string formatted = _formatter.Format(message);
-            _storage.Save(formatted);
+            WriteBodyCount++;
+            LastMessage = message;
         }
     }
 
     [Fact]
-    public void FormattingArchiver_ShouldFormatAndSave()
+    public void FormattingArchive_ShouldCallFormatterWriteMethods()
     {
-        var formatter = new FakeFormatter();
-        var storage = new SpyArchiveStorage();
-        var archiver = new FormattingArchiver(formatter, storage);
+        var spy = new SpyFormatter();
+        var archiver = new FormattingArchive(spy);
         Message message = MessageFactory.Create(title: "Hello", body: "World", importance: 2);
 
-        archiver.Archive(message);
+        archiver.Save(message);
 
-        Assert.Equal(1, formatter.Calls);
-        Assert.Equal(1, storage.SaveCalls);
-        Assert.Single(storage.Saved);
-        Assert.Equal("# Hello\n\nWorld", storage.Saved[0]);
+        Assert.Equal(1, spy.WriteTitleCount);
+        Assert.Equal(1, spy.WriteBodyCount);
+        Assert.Equal(message, spy.LastMessage);
     }
 }

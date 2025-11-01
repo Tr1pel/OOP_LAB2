@@ -1,76 +1,50 @@
-﻿using Itmo.ObjectOrientedProgramming.Lab2.Messages;
+﻿using Itmo.ObjectOrientedProgramming.Lab2.Abstractions;
+using Itmo.ObjectOrientedProgramming.Lab2.Messages;
 using Itmo.ObjectOrientedProgramming.Lab2.Messages.ValueObjects;
+using Itmo.ObjectOrientedProgramming.Lab2.Recipients;
+using Itmo.ObjectOrientedProgramming.Lab2.Recipients.Decorators;
+using Itmo.ObjectOrientedProgramming.Lab2.Results;
 using Itmo.ObjectOrientedProgramming.Lab2.Tests.TestHelpers;
 using Xunit;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Tests;
 
-// Эти тесты покрывают кейсы про фильтры и логирование адресата
 public class RecipientFiltersAndLoggingTests
 {
-    public interface IRecipient { void Deliver(Message message); }
-
-    public interface ILogger { void Log(string message); }
-
-    private sealed class SpyLogger : ILogger
-    {
-        public int CallCount { get; private set; }
-
-        public List<string> Entries { get; } = new();
-
-        public void Log(string message)
-        {
-            CallCount++;
-            Entries.Add(message);
-        }
-    }
-
     private sealed class SpyRecipient : IRecipient
     {
-        public int DeliverCallCount { get; private set; }
+        public int ReceiveCallCount { get; private set; }
 
         public List<Message> Received { get; } = new();
 
-        public void Deliver(Message message)
+        public ReceiveResult Receive(Message message)
         {
-            DeliverCallCount++;
+            ReceiveCallCount++;
             Received.Add(message);
+            return new ReceiveResult.Success();
         }
     }
 
-    private sealed class ImportanceFilteringRecipient : IRecipient
+    private sealed class SpyLogger : ILogger
     {
-        private readonly IRecipient _inner;
-        private readonly Importance _minImportance;
+        public int InfoCount { get; private set; }
 
-        public ImportanceFilteringRecipient(IRecipient inner, Importance minImportance)
+        public int ErrCount { get; private set; }
+
+        public List<string> Entries { get; } = new();
+
+        public void Info(string message)
         {
-            _inner = inner;
-            _minImportance = minImportance;
+            InfoCount++;
+            Entries.Add(message);
         }
 
-        public void Deliver(Message message)
-        {
-            if (message.Importance >= _minImportance)
-                _inner.Deliver(message);
-        }
-    }
+        public void Warn(string message) { /* _ */ }
 
-    private sealed class LoggingRecipient : IRecipient
-    {
-        private readonly IRecipient _inner;
-        private readonly ILogger _logger;
-
-        public LoggingRecipient(IRecipient inner, ILogger logger)
+        public void Err(string message)
         {
-            _inner = inner;
-            _logger = logger;
-        }
-
-        public void Deliver(Message message)
-        {
-            _logger.Log($"Received {message.Id} with {message.Importance}");
-            _inner.Deliver(message);
+            ErrCount++;
+            Entries.Add(message);
         }
     }
 
@@ -78,13 +52,13 @@ public class RecipientFiltersAndLoggingTests
     public void Recipient_WithFilter_ShouldBlockLowImportance()
     {
         var inner = new SpyRecipient();
-        var filtered = new ImportanceFilteringRecipient(inner, Importance.High);
-        Message msg = MessageFactory.Create(importance: 1); // Normal
+        #pragma warning disable CA1859
+        IRecipient filtered = new ImportanceFilterRecipient(inner, Importance.High);
+        Message msg = MessageFactory.Create(importance: 1);
 
-        filtered.Deliver(msg);
+        ReceiveResult res = filtered.Receive(msg);
 
-        Assert.Equal(0, inner.DeliverCallCount);
-        Assert.Empty(inner.Received);
+        Assert.Equal(0, inner.ReceiveCallCount);
     }
 
     [Fact]
@@ -92,13 +66,14 @@ public class RecipientFiltersAndLoggingTests
     {
         var inner = new SpyRecipient();
         var logger = new SpyLogger();
-        var logging = new LoggingRecipient(inner, logger);
-        Message msg = MessageFactory.Create(importance: 3); // Critical
+        IRecipient logging = new LoggingRecipient(inner, logger);
 
-        logging.Deliver(msg);
+        Message msg = MessageFactory.Create(importance: 3);
+        ReceiveResult result = logging.Receive(msg);
 
-        Assert.Equal(1, logger.CallCount);
-        Assert.Single(inner.Received, msg);
+        Assert.IsType<ReceiveResult.Success>(result);
+        Assert.Equal(1, inner.ReceiveCallCount);
+        Assert.True(logger.InfoCount >= 1);
         Assert.Contains(logger.Entries, s => s.Contains(msg.Id.Value.ToString("D"), StringComparison.Ordinal));
     }
 }
